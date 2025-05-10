@@ -57,7 +57,7 @@ class WelcomeScreen extends StatelessWidget {
                         ),
                       ),
                       TextSpan(
-                        text: 'seu carro \nE faça parte da ',
+                        text: 'seu carro \nE faça Parte da ',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 32,
