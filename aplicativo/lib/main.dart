@@ -40,7 +40,7 @@ class WelcomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.1),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: const [
