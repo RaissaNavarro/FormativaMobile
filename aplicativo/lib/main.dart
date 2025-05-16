@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'cadastro.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart'; 
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -13,15 +22,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Arial',
-        scaffoldBackgroundColor: const Color(0xFF2C2B34),
+        scaffoldBackgroundColor: Color(0xFF2C2B34),
       ),
-      home: const WelcomeScreen(),
+      home: const MainScreen(),
     );
   }
 }
 
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -113,19 +122,6 @@ class WelcomeScreen extends StatelessWidget {
           const SizedBox(height: 50),
         ],
       ),
-    );
-  }
-}
-
-class CadastroPage extends StatelessWidget {
-  const CadastroPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Cadastro')),
-      body: const Center(child: Text('Página de cadastro')),
-      
     );
   }
 }
