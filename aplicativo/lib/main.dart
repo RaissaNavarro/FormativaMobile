@@ -49,7 +49,7 @@ class MainScreen extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.1),
+            padding: const EdgeInsets.symmetric(horizontal: 50),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: const [
@@ -57,40 +57,31 @@ class MainScreen extends StatelessWidget {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Cadastre ',
+                        text: 'Fleets Cars ',
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 35,
                           fontWeight: FontWeight.w600,
-                          fontFamily: 'Barlow',
                         ),
                       ),
                       TextSpan(
-                        text: 'seu carro \nE faça parte da ',
+                        text: '\nAdicione seu carro e faça parte do maior time de Gestão de Frota do Brasil.',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 32,
+                          fontSize: 15,
                           fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      TextSpan(
-                        text: 'frota',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 28,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
+                        ) 
+                      )
+                    ]
                   ),
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.start,
                 ),
-                SizedBox(height: 22),
+                SizedBox(height: 30),
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 30  ),
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(

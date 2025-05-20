@@ -12,6 +12,7 @@ class _CadastroPageState extends State<CadastroPage> {
   final carrosRef = FirebaseFirestore.instance.collection('carros');
 
   void _showCarDialog({String? docId, Map<String, dynamic>? data}) {
+    final proprietarioController = TextEditingController(text: data?['proprietario']);
     final nomeController = TextEditingController(text: data?['nome']);
     final distanciaController = TextEditingController(text: data?['distancia']);
     final combustivelController = TextEditingController(text: data?['combustivel']);
@@ -31,6 +32,7 @@ class _CadastroPageState extends State<CadastroPage> {
                   decoration: const InputDecoration(labelText: 'URL da imagem'),
                 ),
                 const SizedBox(height: 10),
+                TextField(controller: proprietarioController, decoration: const InputDecoration(labelText: 'Proprietário')),
                 TextField(controller: nomeController, decoration: const InputDecoration(labelText: 'Nome')),
                 TextField(controller: distanciaController, decoration: const InputDecoration(labelText: 'Distância')),
                 TextField(controller: combustivelController, decoration: const InputDecoration(labelText: 'Combustível')),
@@ -39,10 +41,11 @@ class _CadastroPageState extends State<CadastroPage> {
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar'),),
             ElevatedButton(
               onPressed: () async {
                 final carroData = {
+                  'proprietario' : proprietarioController,
                   'nome': nomeController.text,
                   'distancia': distanciaController.text,
                   'combustivel': combustivelController.text,
@@ -81,18 +84,19 @@ class _CadastroPageState extends State<CadastroPage> {
         children: [
           Center(
             child: data['imgUrl'] != null && data['imgUrl'].toString().isNotEmpty
-                ? Image.network(data['imgUrl'], width: 150, height: 100, errorBuilder: (ctx, err, _) {
+                ? Image.network(data['imgUrl'], width: 200, height: 200, errorBuilder: (ctx, err, _) {
                     return const Icon(Icons.broken_image, size: 100);
                   })
-                : Image.asset('assets/images/carFrota.png', width: 150, height: 100),
+                : Image.asset('assets/images/carFrota.png', width: 100, height: 100),
           ),
-          const SizedBox(height: 20),
-          Text(data['nome'] ?? 'Sem nome', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 10),
+          Text(data['nome'] ?? 'Sem nome', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 5),
+          Text('Proprietário: ${data['proprietario'] ?? ""}'),
           Text('Distância: ${data['distancia'] ?? ""}'),
           Text('Combustível: ${data['combustivel'] ?? ""}'),
-          Text(data['preco'] ?? '', style: const TextStyle(fontWeight: FontWeight.w600)),
-          const SizedBox(height: 10),
+          Text('R\$: ${data['preco'] ?? ""}', style: const TextStyle(fontWeight: FontWeight.w600) ,), 
+          const SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -101,7 +105,7 @@ class _CadastroPageState extends State<CadastroPage> {
                 onPressed: () => _showCarDialog(docId: doc.id, data: data),
               ),
               IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
+                icon: const Icon(Icons.delete, color: Colors.red, ),
                 onPressed: () => carrosRef.doc(doc.id).delete(),
               ),
             ],
@@ -122,10 +126,10 @@ class _CadastroPageState extends State<CadastroPage> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(25),
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             StreamBuilder<QuerySnapshot>(
               stream: carrosRef.where('editavel', isEqualTo: true).snapshots(),
               builder: (context, snapshot) {
@@ -135,16 +139,16 @@ class _CadastroPageState extends State<CadastroPage> {
                 );
               },
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 5),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () => _showCarDialog(), // agora chama o formulário!
+                onPressed: () => _showCarDialog(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF282931),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 30),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 ),
                 icon: const Icon(Icons.add),
                 label: const Text('Adicionar novo carro',
