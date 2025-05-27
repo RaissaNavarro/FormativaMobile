@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'cadastro.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart'; 
+import 'login.dart';
 
 
 void main() async {
@@ -65,6 +66,7 @@ class MainScreen extends StatelessWidget {
                         ),
                       ),
                       TextSpan(
+
                         text: '\nAdicione seu carro e faça parte do maior time de Gestão de Frota do Brasil.',
                         style: TextStyle(
                           color: Colors.white,
@@ -85,12 +87,12 @@ class MainScreen extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const CadastroPage()),
-                  );
-                },
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginPage()),
+                );
+              },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
