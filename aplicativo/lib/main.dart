@@ -1,31 +1,36 @@
+// importações necessárias, tanto parto de design quanto de outras págs.
 import 'package:flutter/material.dart';
 import 'cadastro.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart'; 
+import 'package:firebase_core/firebase_core.dart'; //vai conectar o projeto com o fire
+import 'firebase_options.dart'; //foi criado quando eu rodei o fluterfire cli no cmd, ja com as infos do banco.
 import 'login.dart';
+//--------------------------------------------
 
 
+//Já deixa tudo inicializado pra quando for usar
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions.currentPlatform,//ta iniciando o firebase com as configs especificas do projeto q são pegas do firebase_options.
   );
-  runApp(const MyApp());
+  runApp(const MyApp()); // chama e roda a raiz.
 }
+//----------------------------------------------
 
 
-class MyApp extends StatelessWidget {
+
+class MyApp extends StatelessWidget { // nn tem nenhuma mudança ent é stateless
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { //parte para o design
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Arial',
         scaffoldBackgroundColor: Color(0xFF2C2B34),
       ),
-      home: const MainScreen(),
+      home: const MainScreen(), //declarando q a tela inicial vai ser a MainScreen.
     );
   }
 }
