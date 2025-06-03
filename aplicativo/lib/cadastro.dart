@@ -10,8 +10,7 @@ class CadastroPage extends StatefulWidget {
 
 class _CadastroPageState extends State<CadastroPage> {
   final carrosRef = FirebaseFirestore.instance.collection('carros');
-
-  final String usuarioLogado = 'raissa'; 
+  final String usuarioLogado = 'raissa';
 
   void _showCarDialog({String? docId, Map<String, dynamic>? data}) {
     final imgUrlController = TextEditingController(text: data?['imgUrl']);
@@ -23,55 +22,77 @@ class _CadastroPageState extends State<CadastroPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          backgroundColor: const Color.fromARGB(255, 65, 65, 65),
-          title: Text(
-            docId != null ? 'Editar Carro' : 'Novo Carro',
-            style: const TextStyle(color: Colors.white),
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                _input(imgUrlController, 'URL da imagem'),
-                const SizedBox(height: 10),
-                _input(nomeController, 'Nome'),
-                _input(distanciaController, 'Distância'),
-                _input(combustivelController, 'Combustível'),
-                _input(precoController, 'Preço'),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancelar', style: TextStyle(color: Colors.white)),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    docId != null ? 'Editar Carro' : 'Novo Carro',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _input(imgUrlController, 'URL da imagem'),
+                  const SizedBox(height: 15),
+                  _input(nomeController, 'Nome'),
+                  const SizedBox(height: 15),
+                  _input(distanciaController, 'Distância'),
+                  const SizedBox(height: 15),
+                  _input(combustivelController, 'Combustível'),
+                  const SizedBox(height: 15),
+                  _input(precoController, 'Preço'),
+                  const SizedBox(height: 25),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancelar'),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 112, 112, 112),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          final carro = {
+                            'proprietario': usuarioLogado,
+                            'imgUrl': imgUrlController.text,
+                            'nome': nomeController.text,
+                            'distancia': distanciaController.text,
+                            'combustivel': combustivelController.text,
+                            'preco': precoController.text,
+                          };
+
+                          if (docId != null) {
+                            carrosRef.doc(docId).update(carro);
+                          } else {
+                            carrosRef.add(carro);
+                          }
+
+                          Navigator.pop(context);
+                        },
+                        child: Text(docId != null ? 'Salvar' : 'Adicionar'),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              onPressed: () {
-                final carro = {
-                  'proprietario': usuarioLogado,
-                  'imgUrl': imgUrlController.text,
-                  'nome': nomeController.text,
-                  'distancia': distanciaController.text,
-                  'combustivel': combustivelController.text,
-                  'preco': precoController.text,
-                };
-
-                if (docId != null) {
-                  carrosRef.doc(docId).update(carro);
-                } else {
-                  carrosRef.add(carro);
-                }
-
-                Navigator.pop(context);
-              },
-              child: Text(docId != null ? 'Salvar' : 'Adicionar'),
             ),
-          ],
+          ),
         );
       },
     );
@@ -80,17 +101,10 @@ class _CadastroPageState extends State<CadastroPage> {
   Widget _input(TextEditingController controller, String label) {
     return TextField(
       controller: controller,
-      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.grey),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.white),
-          borderRadius: BorderRadius.circular(15),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );
@@ -103,17 +117,16 @@ class _CadastroPageState extends State<CadastroPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFFFF),
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFFFFFF),
-        title: const Text('Cadastro de Carros'),
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Gestão de Frota',
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showCarDialog(),
-          ),
-        ],
+        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 1,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: carrosRef.snapshots(),
@@ -130,14 +143,12 @@ class _CadastroPageState extends State<CadastroPage> {
 
           if (docs.isEmpty) {
             return const Center(
-              child: Text(
-                'Nenhum carro cadastrado',
-                style: TextStyle(color: Colors.white),
-              ),
+              child: Text('Nenhum carro cadastrado'),
             );
           }
 
           return ListView.builder(
+            padding: const EdgeInsets.all(15),
             itemCount: docs.length,
             itemBuilder: (context, index) {
               final doc = docs[index];
@@ -145,45 +156,52 @@ class _CadastroPageState extends State<CadastroPage> {
               final isEditable = _isCarEditable(data['proprietario']);
 
               return Card(
-                color: const Color(0xFF3A3942),
-                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                elevation: 5,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: ListTile(
                   contentPadding: const EdgeInsets.all(15),
-                  leading: data['imgUrl'] != null
-                      ? Image.network(
-                          data['imgUrl'],
-                          width: 100,
-                          errorBuilder: (context, error, stackTrace) => const Icon(Icons.car_rental, color: Colors.white),
+                  leading: data['imgUrl'] != null && data['imgUrl'].toString().isNotEmpty
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            data['imgUrl'],
+                            width: 110,
+                            height: 80,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.car_rental, size: 50),
+                          ),
                         )
-                      : const Icon(Icons.car_rental, color: Colors.white),
+                      : const Icon(Icons.car_rental, size: 50),
                   title: Text(
                     data['nome'] ?? '',
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
-                    'Distância: ${data['distancia']}\nCombustível: ${data['combustivel']}\nPreço: ${data['preco']}',
-                    style: const TextStyle(color: Colors.white70),
+                    'Distância: ${data['distancia']}\n'
+                    'Combustível: ${data['combustivel']}\n'
+                    'Preço: ${data['preco']}',
                   ),
                   trailing: isEditable
                       ? Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.white),
+                              icon: const Icon(Icons.edit, color: Color.fromARGB(255, 80, 80, 80)),
                               onPressed: () => _showCarDialog(docId: doc.id, data: data),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
+                              icon: const Icon(Icons.delete, color: Color.fromARGB(255, 31, 31, 31)),
                               onPressed: () => carrosRef.doc(doc.id).delete(),
                             ),
                           ],
                         )
                       : const Text(
                           'Fixado',
-                          style: TextStyle(color: Colors.grey, fontSize: 13),
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
                         ),
                 ),
               );
@@ -191,6 +209,23 @@ class _CadastroPageState extends State<CadastroPage> {
           );
         },
       ),
+      floatingActionButton: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: 70,
+        child: FloatingActionButton.extended(
+          onPressed: () => _showCarDialog(),
+          backgroundColor: const Color(0xFF4B4B4B),
+          label: const Text(
+            'Adicionar Carro',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          icon: const Icon(Icons.add, color: Color.fromARGB(99, 255, 255, 255),),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
