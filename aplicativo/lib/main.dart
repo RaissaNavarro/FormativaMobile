@@ -1,6 +1,5 @@
 // importações necessárias, tanto de design quanto de outras páginas
 import 'package:flutter/material.dart';
-import 'cadastro.dart';
 import 'package:firebase_core/firebase_core.dart'; // conecta o projeto ao Firebase
 import 'firebase_options.dart'; // arquivo gerado pelo flutterfire CLI com configs do projeto Firebase
 import 'login.dart';
