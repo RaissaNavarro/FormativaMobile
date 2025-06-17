@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart'; // conecta o projeto ao Firebase
 import 'firebase_options.dart'; // arquivo gerado pelo flutterfire CLI com configs do projeto Firebase
-import 'login.dart';
+import 'autenticar.dart';
 
 
 // função principal da aplicação
@@ -102,7 +102,7 @@ class MainScreen extends StatelessWidget {
                   // vai manda pra pagina de login
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const LoginPage()),
+                    MaterialPageRoute(builder: (_) => const Autenticar()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

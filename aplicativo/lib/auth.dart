@@ -13,7 +13,7 @@ try{
         email: email,
         password: password,
       );
-      return 'Sucess';
+      return 'Success'; //tava dando erro aq pq nn estava seguindo um padrão do texto
 }on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         return 'The password provided is too weak.';

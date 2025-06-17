@@ -31,10 +31,8 @@ class _MapaState extends State<Mapa> {
               height:80,
               child: Icon(Icons.location_pin)
               )
-              
             ]
           )
-
         ]
       ) );
   }

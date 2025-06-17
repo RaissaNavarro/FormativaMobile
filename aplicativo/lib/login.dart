@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
       password: _senha.text.trim(),
     );
 
-    if (message != null && message.contains('Autenticando..')) {
+    if (message == 'Success') {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const CadastroPage()),
@@ -32,7 +32,6 @@ class _LoginPageState extends State<LoginPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message ?? 'Erro desconhecido'),
-        backgroundColor: Colors.red,
       ),
     );
   }

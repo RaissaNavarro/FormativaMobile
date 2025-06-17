@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'api.dart';
+import 'mapa.dart';
 
 class CadastroPage extends StatefulWidget {
   const CadastroPage({super.key});
@@ -9,7 +11,6 @@ class CadastroPage extends StatefulWidget {
 }
 
 class _CadastroPageState extends State<CadastroPage> {
-
   // ta fazendo a referencia da coleção de carros que ta la no firebase
   final carrosRef = FirebaseFirestore.instance.collection('carros');
 
@@ -22,7 +23,9 @@ class _CadastroPageState extends State<CadastroPage> {
     final imgUrlController = TextEditingController(text: data?['imgUrl']);
     final nomeController = TextEditingController(text: data?['nome']);
     final distanciaController = TextEditingController(text: data?['distancia']);
-    final combustivelController = TextEditingController(text: data?['combustivel']);
+    final combustivelController = TextEditingController(
+      text: data?['combustivel'],
+    );
     final precoController = TextEditingController(text: data?['preco']);
 
     // todos os campos pra preencher com os dados pro carro, tanto cadastrando quanto editando
@@ -70,14 +73,18 @@ class _CadastroPageState extends State<CadastroPage> {
                       const SizedBox(width: 10),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 112, 112, 112),
+                          backgroundColor: const Color.fromARGB(
+                            255,
+                            112,
+                            112,
+                            112,
+                          ),
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         onPressed: () {
-                          
                           // Cria o objeto carro
                           final carro = {
                             'proprietario': usuarioLogado,
@@ -110,15 +117,12 @@ class _CadastroPageState extends State<CadastroPage> {
     );
   }
 
-
   Widget _input(TextEditingController controller, String label) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -157,12 +161,9 @@ class _CadastroPageState extends State<CadastroPage> {
           final docs = snapshot.data!.docs;
 
           if (docs.isEmpty) {
-            return const Center(
-              child: Text('Nenhum carro cadastrado'),
-            );
+            return const Center(child: Text('Nenhum carro cadastrado'));
           }
 
-          
           return ListView.builder(
             padding: const EdgeInsets.all(15),
             itemCount: docs.length,
@@ -179,75 +180,134 @@ class _CadastroPageState extends State<CadastroPage> {
                 ),
                 child: ListTile(
                   contentPadding: const EdgeInsets.all(15),
-                  
 
-                  leading: data['imgUrl'] != null && data['imgUrl'].toString().isNotEmpty
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            data['imgUrl'],
-                            width: 110,
-                            height: 80,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(Icons.car_rental, size: 50),
-                          ),
-                        )
-                      : const Icon(Icons.car_rental, size: 50),
-                  
+                  leading:
+                      data['imgUrl'] != null &&
+                              data['imgUrl'].toString().isNotEmpty
+                          ? ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              data['imgUrl'],
+                              width: 110,
+                              height: 80,
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (context, error, stackTrace) =>
+                                      const Icon(Icons.car_rental, size: 50),
+                            ),
+                          )
+                          : const Icon(Icons.car_rental, size: 50),
+
                   title: Text(
                     data['nome'] ?? '',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  
+
                   subtitle: Text(
                     'Distância: ${data['distancia']}\n'
                     'Combustível: ${data['combustivel']}\n'
                     'Preço: ${data['preco']}',
                   ),
-                  
-                  trailing: isEditable
-                      ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Color.fromARGB(255, 80, 80, 80)),
-                              onPressed: () => _showCarDialog(docId: doc.id, data: data),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Color.fromARGB(255, 31, 31, 31)),
-                              onPressed: () => carrosRef.doc(doc.id).delete(),
-                            ),
-                          ],
-                        )
-                      : const Text(
-                          'Fixado',
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
+
+                  trailing:
+                      isEditable
+                          ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Color.fromARGB(255, 80, 80, 80),
+                                ),
+                                onPressed:
+                                    () => _showCarDialog(
+                                      docId: doc.id,
+                                      data: data,
+                                    ),
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Color.fromARGB(255, 31, 31, 31),
+                                ),
+                                onPressed: () => carrosRef.doc(doc.id).delete(),
+                              ),
+                            ],
+                          )
+                          : const Text(
+                            'Fixado',
+                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                          ),
                 ),
               );
             },
           );
         },
       ),
-      // Botão pra adicionar o carro, com bastante estilo pra ele ficar bom na tela
-      floatingActionButton: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.9,
-        height: 70,
-        child: FloatingActionButton.extended(
-          onPressed: () => _showCarDialog(),
-          backgroundColor: const Color(0xFF4B4B4B),
-          label: const Text(
-            'Adicionar Carro',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+
+      floatingActionButton: Stack(
+        children: [
+          Positioned(
+            bottom: 90,
+            left: 30,
+            child: FloatingActionButton(
+              heroTag: 'mapaBtn',
+              backgroundColor: Colors.blueAccent,
+              mini: true,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const Mapa()),
+                );
+              },
+              child: const Icon(Icons.map),
+            ),
           ),
-          icon: const Icon(Icons.add, color: Color.fromARGB(99, 255, 255, 255)),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
+          Positioned(
+            bottom: 90,
+            right: 30,
+            child: FloatingActionButton(
+              heroTag: 'apiBtn',
+              backgroundColor: Colors.deepPurpleAccent,
+              mini: true,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const TelaGet()),
+                );
+              },
+              child: const Icon(Icons.api),
+            ),
           ),
-        ),
+          Positioned(
+            bottom: 10,
+            left: MediaQuery.of(context).size.width * 0.05,
+            right:
+                MediaQuery.of(context).size.width *
+                0.05, //ajustar o botao flutuante do add carro
+            child: FloatingActionButton.extended(
+              onPressed: () => _showCarDialog(),
+              backgroundColor: const Color(0xFF4B4B4B),
+              label: const Text(
+                'Adicionar Carro',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              icon: const Icon(
+                Icons.add,
+                color: Color.fromARGB(99, 255, 255, 255),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
+              ),
+            ),
+          ),
+        ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
